@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Premier Client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: texte à gauche, "journal de quêtes" des 5 modules à droite; puis sections en colonne unique */
+:root {
+  --bg: #eef1f4;
+  --surface: #ffffff;
+  --fg: #12161c;
+  --muted: #566170;
+  --line: #d3d9e0;
+  --accent: #2b4eff;
+  --accent-fg: #ffffff;
+  --xp: #e8a100;
+  --ok: #17794a;
+  --display: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1218; --surface: #161c25; --fg: #e9edf3; --muted: #9aa5b4;
+    --line: #2a3340; --accent: #7a93ff; --accent-fg: #0e1218; --xp: #f2b73a; --ok: #4cc58b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1218; --surface: #161c25; --fg: #e9edf3; --muted: #9aa5b4;
+  --line: #2a3340; --accent: #7a93ff; --accent-fg: #0e1218; --xp: #f2b73a; --ok: #4cc58b;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 17px; line-height: 1.6;
+  padding-block: 0;
+}
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+p { margin: 0; }
+.label { font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+
+/* header */
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 22px; }
+.brand { font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+.brand i { width: 14px; height: 14px; background: var(--accent); display: inline-block; clip-path: polygon(0 0, 100% 0, 100% 62%, 62% 62%, 62% 100%, 0 100%); }
+.top a.cta-s { font-family: var(--mono); font-size: 13px; text-decoration: none; border: 1px solid var(--fg); padding: 8px 14px; white-space: nowrap; }
+.top a.cta-s:hover { background: var(--fg); color: var(--bg); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 56px; align-items: start; padding-block: 44px 72px; }
+.hero > * { min-width: 0; }
+.hero h1 { font-size: clamp(38px, 6vw, 68px); font-weight: 700; margin-block: 14px 22px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.lead { font-size: 19px; color: var(--muted); max-width: 52ch; }
+.buy-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 30px; }
+.btn {
+  display: inline-block; background: var(--accent); color: var(--accent-fg);
+  font-family: var(--display); font-weight: 600; font-size: 19px; text-decoration: none;
+  padding: 15px 26px; border: 0; cursor: pointer;
+  box-shadow: 4px 4px 0 var(--fg); transition: transform .12s, box-shadow .12s;
+}
+.btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--fg); }
+.btn:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--xp); outline-offset: 3px; }
+.price-note { font-size: 14.5px; color: var(--muted); }
+.price-note b { font-family: var(--display); font-size: 26px; color: var(--fg); letter-spacing: -0.02em; }
+.notice { margin-top: 16px; font-family: var(--mono); font-size: 13px; padding: 10px 14px; border: 1px dashed var(--xp); color: var(--fg); }
+
+/* quest log */
+.log { background: var(--surface); border: 1px solid var(--fg); }
+.log-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--fg); }
+.log ol { list-style: none; margin: 0; padding: 0; }
+.log li { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 15px 16px; border-bottom: 1px solid var(--line); }
+.log li:last-child { border-bottom: 0; }
+.lvl { font-family: var(--mono); font-size: 12.5px; color: var(--accent); padding-top: 3px; }
+.log h3 { font-size: 19px; font-weight: 600; }
+.log p { font-size: 14.5px; color: var(--muted); margin-top: 3px; }
+.xp { height: 8px; background: var(--line); margin: 0; }
+.xp span { display: block; height: 100%; width: 100%; background: repeating-linear-gradient(90deg, var(--xp) 0 14px, transparent 14px 17px); }
+
+/* sections */
+section { padding-block: 72px; border-top: 1px solid var(--line); }
+.sec-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 56px; }
+.sec-grid > * { min-width: 0; }
+h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 700; margin-top: 12px; }
+.sec-grid .body { display: grid; gap: 18px; }
+.mod { padding: 22px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 64px 1fr; gap: 12px; }
+.mod:first-child { padding-top: 0; }
+.mod h3 { font-size: 23px; font-weight: 600; }
+.mod p { color: var(--muted); margin-top: 6px; }
+.mod .out { margin-top: 10px; font-family: var(--mono); font-size: 13px; color: var(--ok); }
+.pack { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 30px; }
+.pack div { border: 1px solid var(--line); background: var(--surface); padding: 18px; }
+.pack b { font-family: var(--display); font-size: 18px; font-weight: 600; display: block; margin-bottom: 4px; }
+.pack span { font-size: 15px; color: var(--muted); }
+.not { background: var(--surface); border: 1px solid var(--fg); padding: 26px; }
+.not h3 { font-size: 22px; margin-bottom: 10px; }
+.not p + p { margin-top: 10px; }
+
+/* purchase */
+.checkout { background: var(--fg); color: var(--bg); border-top: 0; }
+.checkout .label { color: var(--bg); opacity: .7; }
+.co-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.co-grid > * { min-width: 0; }
+.checkout ul { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 8px; }
+.checkout li { padding-left: 24px; position: relative; font-size: 16px; }
+.checkout li::before { content: ""; position: absolute; left: 0; top: 9px; width: 10px; height: 10px; background: var(--xp); }
+.co-card { background: var(--bg); color: var(--fg); padding: 30px; }
+.co-card .big { font-family: var(--display); font-size: 56px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.co-card .btn { width: 100%; text-align: center; margin-top: 20px; }
+.co-card small { display: block; margin-top: 14px; color: var(--muted); font-size: 13.5px; }
+
+details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+summary { cursor: pointer; font-family: var(--display); font-weight: 600; font-size: 20px; }
+details p { color: var(--muted); margin-top: 10px; max-width: 62ch; }
+
+footer { padding-block: 30px 40px; font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); }
+
+@media (max-width: 860px) {
+  .hero, .sec-grid, .co-grid { grid-template-columns: 1fr; gap: 36px; }
+  .hero { padding-block: 24px 48px; }
+  section { padding-block: 52px; }
+  body { font-size: 16.5px; }
+}
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+
+html { color-scheme: light dark; }
+body { margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><i></i>Premier Client</div>
+    <a class="cta-s" href="#acheter">Voir le prix</a>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="label">Formation · développeurs de jeux</p>
+      <h1>Décroche ton <em>premier client</em> en développement de jeux.</h1>
+      <p class="lead">Tu sais coder en Unity, C# ou Python. Cette formation t'apprend le reste : monter ton profil, packager tes offres, trouver des clients, faire un devis et livrer proprement.</p>
+      <div class="buy-row">
+        <a class="btn js-buy" href="#acheter">Acheter la formation</a>
+        <p class="price-note"><b>59 €</b><br>paiement unique, accès immédiat</p>
+      </div>
+      <p class="notice js-notice" hidden>Le lien de paiement n'est pas encore connecté sur cette page.</p>
+    </div>
+
+    <aside class="log" aria-label="Programme en 5 niveaux">
+      <div class="log-head"><span class="label">Journal de quêtes</span><span class="label">5 niveaux</span></div>
+      <ol>
+        <li><span class="lvl">NIV. 1</span><div><h3>Ton profil</h3><p>Titre, description et portfolio qui donnent envie de te répondre.</p></div></li>
+        <li><span class="lvl">NIV. 2</span><div><h3>Tes offres</h3><p>Des prestations au forfait, avec un prix et un délai clairs.</p></div></li>
+        <li><span class="lvl">NIV. 3</span><div><h3>La prospection</h3><p>Où chercher, quoi écrire, quand relancer.</p></div></li>
+        <li><span class="lvl">NIV. 4</span><div><h3>Le devis</h3><p>Cadrer le besoin, fixer le tarif, éviter les dérives.</p></div></li>
+        <li><span class="lvl">NIV. 5</span><div><h3>La livraison</h3><p>Livrer par étapes, faire valider, récolter un avis.</p></div></li>
+      </ol>
+      <div class="xp" aria-hidden="true"><span></span></div>
+    </aside>
+  </div>
+</div>
+
+<section>
+  <div class="wrap sec-grid">
+    <div>
+      <p class="label">Programme</p>
+      <h2>Cinq modules, un livrable à chaque niveau.</h2>
+    </div>
+    <div class="body">
+      <div class="mod"><span class="lvl">NIV. 1</span><div><h3>Ton profil</h3><p>Écrire un titre et une description qui parlent à un client, présenter tes projets avec un GIF et un lien, et publier un README de portfolio sur GitHub.</p><p class="out">Livrable : profil Malt ou Upwork + README prêts à publier</p></div></div>
+      <div class="mod"><span class="lvl">NIV. 2</span><div><h3>Tes offres</h3><p>Transformer tes compétences en offres vendables : prototype Unity, mécanique de gameplay, script Python, correction de bugs. Choisir un tarif de départ.</p><p class="out">Livrable : 3 à 4 offres avec prix et délais</p></div></div>
+      <div class="mod"><span class="lvl">NIV. 3</span><div><h3>La prospection</h3><p>Plateformes, communautés et Discords de développeurs. Messages de candidature personnalisés en deux minutes, relance à J+4, suivi dans une feuille.</p><p class="out">Livrable : 50 candidatures envoyées en deux semaines</p></div></div>
+      <div class="mod"><span class="lvl">NIV. 4</span><div><h3>Le devis</h3><p>Poser les bonnes questions, décrire le périmètre, découper en étapes et fixer un prix. Que faire quand le client change d'avis en cours de route.</p><p class="out">Livrable : modèle de devis réutilisable</p></div></div>
+      <div class="mod"><span class="lvl">NIV. 5</span><div><h3>La livraison</h3><p>Livrer par versions intermédiaires, documenter ton code, facturer, demander un avis et transformer un client en client récurrent.</p><p class="out">Livrable : processus de livraison et demande d'avis</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="label">Inclus</p>
+    <h2>Des modèles à copier, pas seulement de la théorie.</h2>
+    <div class="pack">
+      <div><b>Textes de profil</b><span>En français et en anglais, à adapter avec tes projets.</span></div>
+      <div><b>Modèles de messages</b><span>Candidature, post « for hire », relance, annonce de cours.</span></div>
+      <div><b>README de portfolio</b><span>Une structure GitHub prête à remplir.</span></div>
+      <div><b>Feuille de suivi</b><span>Dates, clients, statuts et relances au même endroit.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec-grid">
+    <div>
+      <p class="label">À savoir avant d'acheter</p>
+      <h2>Ce que la formation promet, et ce qu'elle ne promet pas.</h2>
+    </div>
+    <div class="body">
+      <div class="not">
+        <h3>Pas de revenu garanti</h3>
+        <p>Personne ne peut te promettre un montant par mois. La formation te donne une méthode et des outils. Les résultats dépendent du temps que tu y consacres, de ton niveau et du marché.</p>
+        <p>Compte en général quelques semaines de candidatures régulières avant le premier client.</p>
+      </div>
+      <div>
+        <h3 style="font-size:22px;margin-bottom:8px">Qui te forme</h3>
+        <p style="color:var(--muted)">Je m'appelle Mathis, je développe des jeux en Python et en Unity. J'ai terminé un RPG complet en Python (génération procédurale, crafting, succès) et un jeu mobile à contrôles tactiles. Cette formation rassemble la méthode que j'utilise pour lancer mon activité de freelance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="checkout" id="acheter">
+  <div class="wrap co-grid">
+    <div>
+      <p class="label">Accès immédiat</p>
+      <h2>Commence le niveau 1 aujourd'hui.</h2>
+      <ul>
+        <li>5 modules avec un livrable chacun</li>
+        <li>Tous les modèles de messages et de profils</li>
+        <li>Accès à vie, mises à jour comprises</li>
+      </ul>
+    </div>
+    <div class="co-card">
+      <p class="label" style="color:var(--muted);opacity:1">Premier Client</p>
+      <p class="big">59 €</p>
+      <a class="btn js-buy" href="#acheter">Payer maintenant</a>
+      <p class="notice js-notice" hidden style="margin-top:14px">Le lien de paiement n'est pas encore connecté sur cette page.</p>
+      <small>Paiement sécurisé sur la page de paiement Stripe. Tu reçois ton accès par email après le règlement.</small>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec-grid">
+    <div>
+      <p class="label">Questions</p>
+      <h2>Avant de te lancer.</h2>
+    </div>
+    <div>
+      <details><summary>Pour quel niveau ?</summary><p>Pour les développeurs débutants à intermédiaires qui savent déjà réaliser un petit projet en Unity, en C# ou en Python et veulent être payés pour ce savoir-faire.</p></details>
+      <details><summary>Faut-il un statut d'entrepreneur ?</summary><p>En France, il faut déclarer une activité pour facturer, par exemple en micro-entreprise. Le niveau 5 explique à quel moment le faire. Les démarches elles-mêmes se font sur le site officiel de l'administration.</p></details>
+      <details><summary>Puis-je être remboursé ?</summary><p>Oui, pendant 14 jours après l'achat, si la formation ne te convient pas. Écris-moi à l'adresse indiquée sur ton reçu de paiement.</p></details>
+      <details><summary>Combien de temps faut-il y consacrer ?</summary><p>Prévois environ dix à douze heures par semaine pendant le premier mois pour construire ton profil et envoyer tes candidatures.</p></details>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <span>© 2026 Premier Client · Mathis</span>
+    <span>Prix TTC. Aucun revenu n'est garanti.</span>
+  </footer>
+</div>
+
+<script>
+  // Colle ici le lien de paiement Stripe (Payment Link) pour activer l'achat.
+  var CHECKOUT_URL = "https://buy.stripe.com/test_cNidR93Y43883Ja0eQ8og00";
+
+  var buyLinks = document.querySelectorAll(".js-buy");
+  var notices = document.querySelectorAll(".js-notice");
+  for (var i = 0; i < buyLinks.length; i++) {
+    if (CHECKOUT_URL) {
+      buyLinks[i].setAttribute("href", CHECKOUT_URL);
+      buyLinks[i].setAttribute("target", "_blank");
+      buyLinks[i].setAttribute("rel", "noopener");
+    } else {
+      buyLinks[i].addEventListener("click", function () {
+        for (var j = 0; j < notices.length; j++) { notices[j].hidden = false; }
+      });
+    }
+  }
+</script>
+
+</body>
+</html>
