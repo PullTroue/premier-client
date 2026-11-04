@@ -12,7 +12,8 @@ Site statique : un seul fichier, `index.html`, sans dépendance ni étape de bui
 ## Mettre en ligne
 Glisse le dossier sur Netlify Drop, Vercel, Cloudflare Pages ou GitHub Pages.
 
-## À compléter avant de vendre
-- Conditions de vente et mentions légales (statut, SIRET).
-- Politique de remboursement (14 jours indiqués dans la FAQ : à confirmer).
-- Le contenu des 5 modules.
+## Pages légales
+`mentions-legales.html` et `cgv.html` contiennent des champs surlignés en jaune
+à remplacer par tes vraies informations : nom, adresse, SIRET, email de contact,
+délai d'envoi de l'accès et médiateur de la consommation.
+Ne passe pas Stripe en mode réel tant qu'ils ne sont pas remplis.
